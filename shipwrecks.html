@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shipwrecks</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+        header {
+            background-color: #2c3e50;
+            color: white;
+            padding: 20px 0;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        main {
+            padding: 20px;
+        }
+        .timeline {
+            position: relative;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 40px 0;
+        }
+        .timeline::after {
+            content: '';
+            position: absolute;
+            width: 6px;
+            background-color: #3498db;
+            top: 0;
+            bottom: 0;
+            left: 50%;
+            margin-left: -3px;
+        }
+        .timeline-container {
+            padding: 10px 40px;
+            position: relative;
+            background-color: inherit;
+            width: 50%;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.5s ease-in-out;
+        }
+        .timeline-container.left {
+            left: 0;
+        }
+        .timeline-container.right {
+            left: 50%;
+        }
+        .timeline-container::after {
+            content: '';
+            position: absolute;
+            width: 25px;
+            height: 25px;
+            right: -17px;
+            background-color: white;
+            border: 4px solid #3498db;
+            top: 15px;
+            border-radius: 50%;
+            z-index: 1;
+            transition: background-color 0.3s ease;
+        }
+        .timeline-container.right::after {
+            left: -16px;
+        }
+        .timeline-content {
+            padding: 20px;
+            background-color: white;
+            position: relative;
+            border-radius: 6px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s;
+        }
+        .timeline-content:hover {
+            transform: scale(1.05);
+        }
+        .timeline-content h2 {
+            margin-top: 0;
+            font-size: 1.5em;
+            color: #3498db;
+        }
+        .timeline-content p {
+            margin: 10px 0;
+        }
+        .timeline-container:hover::after {
+            background-color: #2980b9;
+        }
+        .timeline-container.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .tooltip {
+            position: relative;
+            display: inline-block;
+            cursor: pointer;
+            color: #3498db;
+            border-bottom: 1px dotted #3498db;
+        }
+        .tooltip .tooltiptext {
+            visibility: hidden;
+            width: 200px;
+            background-color: #2c3e50;
+            color: #fff;
+            text-align: center;
+            border-radius: 6px;
+            padding: 5px 0;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%;
+            left: 50%;
+            margin-left: -100px;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        .tooltip:hover .tooltiptext {
+            visibility: visible;
+            opacity: 1;
+        }
+        #map {
+            height: 500px;
+            width: 100%;
+            margin-top: 20px;
+            border-radius: 6px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        @media screen and (max-width: 768px) {
+            .timeline-container {
+                width: 100%;
+                padding-left: 70px;
+                padding-right: 25px;
+            }
+            .timeline-container.right {
+                left: 0%;
+            }
+            .timeline-container.left::before {
+                left: 60px;
+                border-color: transparent transparent transparent #3498db;
+            }
+            .timeline-container.right::before {
+                left: 60px;
+                border-color: transparent transparent transparent #3498db;
+            }
+            .timeline::after {
+                left: 60px;
+            }
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            padding-top: 60px;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgb(0,0,0);
+            background-color: rgba(0,0,0,0.4);
+        }
+        .modal-content {
+            background-color: #fefefe;
+            margin: 5% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            border-radius: 6px;
+        }
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <button style="float: left;"><a href="main.html">🏡 Home</a></button>
+        <h1>Shipwrecks</h1>
+    </header>
+    <main>
+        <section class="timeline">
+            <div class="timeline-container left">
+                <div class="timeline-content">
+                    <h2>1900 - RMS Titanic</h2>
+                    <p>The RMS Titanic sank on April 15, 1912, after hitting an iceberg during its maiden voyage. <span class="tooltip">Learn More<span class="tooltiptext">The Titanic was the largest ship afloat at the time of her maiden voyage. It was built by the Harland and Wolff shipyard in Belfast.</span></span></p>
+                    <button onclick="openModal('titanic')">Read More</button>
+                </div>
+            </div>
+            <div class="timeline-container right">
+                <div class="timeline-content">
+                    <h2>1915 - RMS Lusitania</h2>
+                    <p>The RMS Lusitania was sunk on May 7, 1915, by a German U-boat during World War I. <span class="tooltip">Learn More<span class="tooltiptext">The sinking of the Lusitania enraged Americans and hastened the United States' entry into World War I.</span></span></p>
+                    <button onclick="openModal('lusitania')">Read More</button>
+                </div>
+            </div>
+            <div class="timeline-container left">
+                <div class="timeline-content">
+                    <h2>1941 - USS Arizona</h2>
+                    <p>The USS Arizona was sunk during the attack on Pearl Harbor on December 7, 1941. <span class="tooltip">Learn More<span class="tooltiptext">The USS Arizona was a Pennsylvania-class battleship built for and by the United States Navy in the mid-1910s.</span></span></p>
+                    <button onclick="openModal('arizona')">Read More</button>
+                </div>
+            </div>
+        </section>
+        <div id="map"></div>
+    </main>
+
+    <!-- Modals -->
+    <div id="titanic" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('titanic')">&times;</span>
+            <h2>RMS Titanic</h2>
+            <p>The RMS Titanic was a British passenger liner that sank in the North Atlantic Ocean on April 15, 1912, after striking an iceberg during her maiden voyage from Southampton to New York City. Of the estimated 2,224 passengers and crew aboard, more than 1,500 died, making the sinking one of modern history's deadliest peacetime commercial marine disasters. The RMS Titanic was the largest ship afloat at the time it entered service and was the second of three Olympic-class ocean liners operated by the White Star Line. She was built by the Harland and Wolff shipyard in Belfast. Thomas Andrews, her architect, died in the disaster.</p>
+        </div>
+    </div>
+
+    <div id="lusitania" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('lusitania')">&times;</span>
+            <h2>RMS Lusitania</h2>
+            <p>The RMS Lusitania was a British ocean liner that was sunk on May 7, 1915, by a German U-boat 11 miles off the southern coast of Ireland. The sinking presaged the United States' declaration of war on Germany in 1917. She was a holder of the Blue Riband appellation for the fastest Atlantic crossing and was briefly the world's largest passenger ship until the completion of the Mauretania three months later.</p>
+        </div>
+    </div>
+
+    <div id="arizona" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('arizona')">&times;</span>
+            <h2>USS Arizona</h2>
+            <p>The USS Arizona was a Pennsylvania-class battleship built for the United States Navy in the mid-1910s. Named in honor of the 48th state’s recent admission into the union, the ship was commissioned in 1916. Shortly before noon on December 7, 1941, the Arizona was attacked by Japanese bombers at Pearl Harbor, Hawaii, as part of the overall surprise attack. Bombs detonated in her forward magazines causing her to explode violently and sink, with the loss of 1,177 officers and crewmen. Unlike many of the other ships sunk or damaged that day, the Arizona was never repaired, but her wreck remains at Pearl Harbor as a memorial to those who died that day.</p>
+        </div>
+    </div>
+
+    <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&callback=initMap" async defer></script>
+    <script>
+        function initMap() {
+            var map = new google.maps.Map(document.getElementById('map'), {
+                zoom: 2,
+                center: {lat: 20.0, lng: 0.0}
+            });
+
+            var shipwrecks = [
+                {position: {lat: 41.7325, lng: -49.9469}, title: "RMS Titanic"},
+                {position: {lat: 51.2333, lng: -8.5333}, title: "RMS Lusitania"},
+                {position: {lat: 21.3667, lng: -157.9333}, title: "USS Arizona"}
+            ];
+
+            shipwrecks.forEach(function(shipwreck) {
+                var marker = new google.maps.Marker({
+                    position: shipwreck.position,
+                    map: map,
+                    title: shipwreck.title
+                });
+            });
+        }
+
+        // Intersection Observer for timeline animation
+        const timelineContainers = document.querySelectorAll('.timeline-container');
+        const observer = new IntersectionObserver(entries => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.5 });
+
+        timelineContainers.forEach(container => {
+            observer.observe(container);
+        });
+
+        // Modal functionality
+        function openModal(id) {
+            document.getElementById(id).style.display = "block";
+        }
+
+        function closeModal(id) {
+            document.getElementById(id).style.display = "none";
+        }
+    </script>
+</body>
+</html>

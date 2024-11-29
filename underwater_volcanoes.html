@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Underwater Volcanoes</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(to bottom, #0a3d62, #1e3799);
+            color: #f5f6fa;
+            text-align: center;
+            overflow-x: hidden;
+            background-repeat: no-repeat
+        }
+
+        header {
+            background: linear-gradient(to bottom, #1e3799, #4a69bd);
+            padding: 40px 0;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+            border-bottom: 2px solid #3c6382;
+        }
+
+        h1 {
+            font-size: 3rem;
+            margin: 0;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        p {
+            font-size: 1.2rem;
+            margin-top: 10px;
+        }
+
+        .volcano-info {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 40px 20px;
+            background: linear-gradient(to bottom, #1e3799, #4a69bd);
+            box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.5);
+        }
+
+        .volcano-info .volcano-image img {
+            width: 100%;
+            max-width: 400px;
+            border-radius: 20px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+            animation: float 4s ease-in-out infinite;
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .volcano-info .volcano-text {
+            max-width: 700px;
+            margin-top: 30px;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .volcano-info h2 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+        }
+
+        .eruption-animation {
+            position: relative;
+            height: 300px;
+            background: linear-gradient(to bottom, #1e3799, #0a3d62);
+            overflow: hidden;
+            box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Volcano Base */
+        .volcano {
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 120px;
+            height: 60px;
+            background: #2f3640;
+            clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+            z-index: 10;
+            box-shadow: 0px 0px 15px rgba(255, 69, 58, 0.8);
+        }
+
+        /* Smoke */
+        .smoke {
+            position: absolute;
+            bottom: 60px;
+            left: 50%;
+            width: 40px;
+            height: 80px;
+            background: radial-gradient(circle, rgba(0, 0, 0, 0.5), transparent);
+            border-radius: 50%;
+            opacity: 0.7;
+            animation: smokeRise 6s ease-in-out infinite;
+            transform: translateX(-50%) scale(1);
+        }
+
+        .smoke:nth-child(2) {
+            width: 50px;
+            height: 100px;
+            left: 45%;
+            animation-duration: 5s;
+            animation-delay: 1s;
+            opacity: 0.6;
+        }
+
+        .smoke:nth-child(3) {
+            width: 60px;
+            height: 120px;
+            left: 55%;
+            animation-duration: 7s;
+            animation-delay: 2s;
+            opacity: 0.5;
+        }
+
+        /* Lava */
+        .lava {
+            position: absolute;
+            bottom: 60px;
+            left: 50%;
+            width: 40px;
+            height: 200px;
+            background: radial-gradient(circle, #ff5733, #c70039);
+            border-radius: 50%;
+            animation: erupt 3s ease-in-out infinite;
+            transform: translateX(-50%);
+            z-index: 5;
+            box-shadow: 0px 0px 25px rgba(255, 87, 51, 0.8);
+        }
+
+        /* Additional Lava Streams */
+        .lava:nth-child(5) {
+            width: 20px;
+            height: 150px;
+            left: 45%;
+            animation-duration: 2.5s;
+        }
+
+        .lava:nth-child(6) {
+            width: 30px;
+            height: 170px;
+            left: 55%;
+            animation-duration: 3.5s;
+        }
+
+        /* Glowing Effect */
+        .volcano::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            width: 140px;
+            height: 140px;
+            background: radial-gradient(circle, rgba(255, 87, 51, 0.6), transparent);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            animation: pulse 2s ease-in-out infinite;
+            z-index: 3;
+        }
+
+        /* Bubbles */
+        .bubble {
+            position: absolute;
+            bottom: 10%;
+            left: 50%;
+            width: 20px;
+            height: 20px;
+            background: rgba(255, 255, 255, 0.7);
+            border-radius: 50%;
+            animation: bubbleRise 5s ease-in-out infinite;
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .bubble:nth-child(7) {
+            left: 30%;
+            width: 15px;
+            height: 15px;
+            animation-duration: 6s;
+        }
+
+        .bubble:nth-child(8) {
+            left: 70%;
+            width: 25px;
+            height: 25px;
+            animation-duration: 4s;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-15px); }
+        }
+
+        @keyframes erupt {
+            0% { height: 0; opacity: 0; }
+            50% { height: 200px; opacity: 1; }
+            100% { height: 0; opacity: 0; }
+        }
+
+        @keyframes smokeRise {
+            0% { transform: translateX(-50%) translateY(0) scale(1); opacity: 0.7; }
+            50% { transform: translateX(-50%) translateY(-50px) scale(1.2); opacity: 0.5; }
+            100% { transform: translateX(-50%) translateY(-120px) scale(1.5); opacity: 0; }
+        }
+
+        @keyframes pulse {
+            0% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+            50% { transform: translate(-50%, -50%) scale(1.1); opacity: 0.6; }
+            100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+        }
+
+        @keyframes bubbleRise {
+            0% { transform: translateY(0) scale(1); }
+            100% { transform: translateY(-350px) scale(1.2); }
+        }
+
+        footer {
+            background: linear-gradient(to top, #1e3799, #4a69bd);
+            padding: 20px 0;
+            box-shadow: 0 -8px 16px rgba(0, 0, 0, 0.3);
+            border-top: 2px solid #3c6382;
+        }
+
+        footer p {
+            font-size: 1.2rem;
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Underwater Volcanoes</h1>
+        <p>Explore the mysterious and fascinating world beneath the ocean's surface</p>
+    </header>
+    
+    <section class="volcano-info">
+        <div class="volcano-image">
+            <img src="https://images.stockcake.com/public/b/2/f/b2f6c20c-0cda-4aad-8096-606fd32392c4_large/underwater-volcanic-eruption-stockcake.jpg" alt="Underwater Volcano">
+        </div>
+        <div class="volcano-text">
+            <h2>What Are Underwater Volcanoes?</h2>
+
+            <p>
+                Underwater volcanoes, also known as submarine volcanoes, are volcanic formations beneath the ocean surface. These volcanoes can form new islands, shape the ocean floor, and create hydrothermal vents that support unique ecosystems. The intense pressure and cold temperatures of the deep ocean create a unique environment for these volcanoes, making their eruptions both spectacular and mysterious.
+            </p>
+        </div>
+    </section>
+
+    <section class="eruption-animation">
+        <div class="volcano"></div>
+        <div class="lava"></div>
+        <div class="lava"></div>
+        <div class="lava"></div>
+        <div class="smoke"></div>
+        <div class="smoke"></div>
+        <div class="smoke"></div>
+        <div class="bubble"></div>
+        <div class="bubble"></div>
+        <div class="bubble"></div>
+    </section>
+
+    <footer>
+        <p>© 2024 Explore the Ocean. All Rights Reserved.</p>
+    </footer>
+</body>
+</html>
+
